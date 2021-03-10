@@ -4,8 +4,8 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/rojtjo/laravel-auto-subscriber/Tests?label=tests)](https://github.com/rojtjo/laravel-auto-subscriber/actions?query=workflow%3ATests+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/rojtjo/laravel-auto-subscriber.svg?style=flat-square)](https://packagist.org/packages/rojtjo/laravel-auto-subscriber)
 
-
-Automatically subcribe to all events for which your subscriber contains a handler
+Automatically subscribe to all events for which your subscriber contains a handler. Under the hood we use reflection to
+detect all listeners defined on the subscriber.
 
 ## Installation
 
@@ -17,6 +17,11 @@ composer require rojtjo/laravel-auto-subscriber
 
 ## Usage
 
+All you have to do is use the `Rojtjo\LaravelAutoSubscriber\AutoSubscriber` trait on your subscriber class. Also make
+sure to register your subscriber in the `EventServiceProvider` like you're used to.
+
+## Example
+
 ```php
 use Rojtjo\LaravelAutoSubscriber\AutoSubscriber;
 
@@ -26,7 +31,24 @@ final class UserNotifier
 
     public function welcomeUser(UserCreated $event): void
     {
+        // Send welcome notification..
     }
+}
+```
+
+This would equivalent to a handwritten subscriber like shown below.
+
+```php
+use Illuminate\Contracts\Events\Dispatcher;
+
+final class UserNotifier
+{
+    public function subscribe(Dispatcher $events)
+    {
+        $events->listen(UserCreated::class, [$this, 'welcomeUser']);
+    }
+
+    // ...
 }
 ```
 
