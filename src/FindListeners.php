@@ -6,6 +6,7 @@ namespace Rojtjo\LaravelAutoSubscriber;
 
 use Illuminate\Support\Collection;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 final class FindListeners
 {
@@ -32,7 +33,12 @@ final class FindListeners
                 return false;
             }
 
-            if ($parameter->getType()->isBuiltin()) {
+            $type = $parameter->getType();
+            if ($type->isBuiltin()) {
+                return false;
+            }
+
+            if (! $type instanceof ReflectionNamedType) {
                 return false;
             }
 
@@ -52,7 +58,10 @@ final class FindListeners
         return function (ReflectionMethod $method) {
             [$parameter] = $method->getParameters();
 
-            return $parameter->getType()->getName();
+            /** @var ReflectionNamedType $type */
+            $type = $parameter->getType();
+
+            return $type->getName();
         };
     }
 }
