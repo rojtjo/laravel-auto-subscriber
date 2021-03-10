@@ -28,7 +28,7 @@ final class FindListeners
             }
 
             [$parameter] = $method->getParameters();
-            if ( ! $parameter->hasType()) {
+            if (! $parameter->hasType()) {
                 return false;
             }
 
