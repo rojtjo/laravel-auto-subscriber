@@ -27,6 +27,7 @@ final class AutoSubscriberTest extends TestCase
         $this->dispatcher->assertMissingListener(BlogNotifier::class, 'privateMethodsAreIgnored');
         $this->dispatcher->assertMissingListener(BlogNotifier::class, 'protectedMethodsAreIgnored');
         $this->dispatcher->assertMissingListener(BlogNotifier::class, 'multipleParametersIsInvalid');
+        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'scalarParameterType');
     }
 
     /** @test */
@@ -75,6 +76,10 @@ final class BlogNotifier
     }
 
     public function multipleParametersIsInvalid(NewReply $event, string $foo): void
+    {
+    }
+
+    public function scalarParameterType(string $event): void
     {
     }
 }
