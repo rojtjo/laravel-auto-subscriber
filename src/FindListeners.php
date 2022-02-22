@@ -17,7 +17,7 @@ final class FindListeners
         return collect($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
             ->filter(self::hasOneClassParameter())
             ->keyBy(self::handlerMethod())
-            ->except('subscribe')
+            ->except(['subscribe'])
             ->map(self::eventName());
     }
 
