@@ -1,7 +1,7 @@
 # laravel-auto-subscriber
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/rojtjo/laravel-auto-subscriber.svg?style=flat-square)](https://packagist.org/packages/rojtjo/laravel-auto-subscriber)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/rojtjo/laravel-auto-subscriber/Tests?label=tests)](https://github.com/rojtjo/laravel-auto-subscriber/actions?query=workflow%3ATests+branch%3Amaster)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/rojtjo/laravel-auto-subscriber/run-tests.yml?branch=master)](https://github.com/rojtjo/laravel-auto-subscriber/actions?query=workflow%3ATests+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/rojtjo/laravel-auto-subscriber.svg?style=flat-square)](https://packagist.org/packages/rojtjo/laravel-auto-subscriber)
 
 Automatically subscribe to all events for which your subscriber contains a handler. Under the hood we use reflection to
