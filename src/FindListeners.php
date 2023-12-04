@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rojtjo\LaravelAutoSubscriber;
 
 use Illuminate\Support\Collection;
+use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
@@ -38,17 +39,20 @@ final class FindListeners
             }
 
             $type = $parameter->getType();
-            $types = [$type];
-            if ($type instanceof ReflectionUnionType) {
-                $types = $type->getTypes();
+            if ($type instanceof ReflectionIntersectionType) {
+                return false;
             }
 
+            $types = $type instanceof ReflectionUnionType
+                ? $type->getTypes()
+                : [$type];
+
             foreach ($types as $type) {
-                if ($type->isBuiltin()) {
+                if (! $type instanceof ReflectionNamedType) {
                     return false;
                 }
 
-                if (! $type instanceof ReflectionNamedType) {
+                if ($type->isBuiltin()) {
                     return false;
                 }
             }
@@ -69,12 +73,11 @@ final class FindListeners
         return function (ReflectionMethod $method) {
             [$parameter] = $method->getParameters();
 
-            /** @var ReflectionNamedType $type */
+            /** @var ReflectionNamedType|ReflectionUnionType $type */
             $type = $parameter->getType();
-            $types = [$type];
-            if ($type instanceof ReflectionUnionType) {
-                $types = $type->getTypes();
-            }
+            $types = $type instanceof ReflectionUnionType
+                ? $type->getTypes()
+                : [$type];
 
             return array_map(
                 fn (ReflectionNamedType $type) => $type->getName(),
