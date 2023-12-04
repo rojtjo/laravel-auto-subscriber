@@ -7,6 +7,7 @@ namespace Rojtjo\LaravelAutoSubscriber;
 use Illuminate\Support\Collection;
 use ReflectionMethod;
 use ReflectionNamedType;
+use Web\Integrations\Meilisearch\Catalog\Indexer;
 
 final class FindListeners
 {
@@ -34,12 +35,19 @@ final class FindListeners
             }
 
             $type = $parameter->getType();
-            if ($type->isBuiltin()) {
-                return false;
+            $types = [$type];
+            if ($type instanceof \ReflectionUnionType) {
+                $types = $type->getTypes();
             }
 
-            if (! $type instanceof ReflectionNamedType) {
-                return false;
+            foreach ($types as $type) {
+                if ($type->isBuiltin()) {
+                    return false;
+                }
+
+                if (! $type instanceof ReflectionNamedType) {
+                    return false;
+                }
             }
 
             return true;
@@ -55,13 +63,20 @@ final class FindListeners
 
     private static function eventName(): callable
     {
-        return function (ReflectionMethod $method) {
+        return function (ReflectionMethod $method, string $handlerMethod) {
             [$parameter] = $method->getParameters();
 
             /** @var ReflectionNamedType $type */
             $type = $parameter->getType();
+            $types = [$type];
+            if ($type instanceof \ReflectionUnionType) {
+                $types = $type->getTypes();
+            }
 
-            return $type->getName();
+            return array_map(
+                fn (ReflectionNamedType $type) => $type->getName(),
+                $types,
+            );
         };
     }
 }
