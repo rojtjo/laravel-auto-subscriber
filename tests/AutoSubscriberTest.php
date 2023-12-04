@@ -23,7 +23,7 @@ final class AutoSubscriberTest extends TestCase
 
         $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendNewReplyNotification', NewReply::class);
         $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendAnotherNewReplyNotification', NewReply::class);
-        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyChanged::class);
+        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyUpdated::class);
         $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyDeleted::class);
         $this->dispatcher->assertMissingListener(BlogNotifier::class, 'subscribe');
         $this->dispatcher->assertMissingListener(BlogNotifier::class, 'privateMethodsAreIgnored');
@@ -69,7 +69,7 @@ final class BlogNotifier
     {
     }
 
-    public function sendReplyChangedNotification(ReplyChanged|ReplyDeleted $event): void
+    public function sendReplyChangedNotification(ReplyUpdated|ReplyDeleted $event): void
     {
     }
 
