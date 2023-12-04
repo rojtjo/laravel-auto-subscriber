@@ -7,9 +7,13 @@ namespace Rojtjo\LaravelAutoSubscriber;
 use Illuminate\Support\Collection;
 use ReflectionMethod;
 use ReflectionNamedType;
+use ReflectionUnionType;
 
 final class FindListeners
 {
+    /**
+     * @return Collection<string, array<string>>
+     */
     public static function for(object $subscriber): Collection
     {
         $reflectionClass = new \ReflectionClass($subscriber);
@@ -35,7 +39,7 @@ final class FindListeners
 
             $type = $parameter->getType();
             $types = [$type];
-            if ($type instanceof \ReflectionUnionType) {
+            if ($type instanceof ReflectionUnionType) {
                 $types = $type->getTypes();
             }
 
@@ -62,13 +66,13 @@ final class FindListeners
 
     private static function eventName(): callable
     {
-        return function (ReflectionMethod $method, string $handlerMethod) {
+        return function (ReflectionMethod $method) {
             [$parameter] = $method->getParameters();
 
             /** @var ReflectionNamedType $type */
             $type = $parameter->getType();
             $types = [$type];
-            if ($type instanceof \ReflectionUnionType) {
+            if ($type instanceof ReflectionUnionType) {
                 $types = $type->getTypes();
             }
 
