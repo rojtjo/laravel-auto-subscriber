@@ -7,7 +7,6 @@ namespace Rojtjo\LaravelAutoSubscriber;
 use Illuminate\Support\Collection;
 use ReflectionMethod;
 use ReflectionNamedType;
-use Web\Integrations\Meilisearch\Catalog\Indexer;
 
 final class FindListeners
 {
