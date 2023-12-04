@@ -18,7 +18,7 @@ final class DispatcherFake implements Dispatcher
 
         $this->listeners[] = [
             'event' => $events,
-            'subscriber' => get_class($subscriber),
+            'subscriber' => $subscriber,
             'handler' => $handler,
         ];
     }

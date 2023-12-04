@@ -16,7 +16,7 @@ trait AutoSubscriber
             ->except($exclude)
             ->each(function (array $events, string $handler) use ($dispatcher) {
                 foreach ($events as $event) {
-                    $dispatcher->listen($event, [$this, $handler]);
+                    $dispatcher->listen($event, [static::class, $handler]);
                 }
             });
     }
