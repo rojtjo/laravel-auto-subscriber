@@ -61,6 +61,9 @@ final class FindListeners
         };
     }
 
+    /**
+     * @return callable(ReflectionMethod): string
+     */
     private static function handlerMethod(): callable
     {
         return function (ReflectionMethod $method) {
