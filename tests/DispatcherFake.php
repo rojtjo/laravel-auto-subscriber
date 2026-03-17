@@ -10,8 +10,15 @@ use PHPUnit\Framework\Assert;
 
 final class DispatcherFake implements Dispatcher
 {
+    /**
+     * @var list<array{event: string|list<string>, subscriber: object, handler: callable}>
+     */
     private array $listeners = [];
 
+    /**
+     * @param  string  $events
+     * @param  array{object, string}  $listener
+     */
     public function listen($events, $listener = null)
     {
         [$subscriber, $handler] = $listener;
@@ -48,14 +55,23 @@ final class DispatcherFake implements Dispatcher
             ->isNotEmpty();
     }
 
+    /**
+     * @phpstan-ignore return.missing
+     */
     public function hasListeners($eventName) {}
 
     public function subscribe($subscriber) {}
 
     public function until($event, $payload = []) {}
 
+    /**
+     * @phpstan-ignore missingType.iterableValue, return.missing
+     */
     public function dispatch($event, $payload = [], $halt = false) {}
 
+    /**
+     * @phpstan-ignore missingType.iterableValue
+     */
     public function push($event, $payload = []) {}
 
     public function flush($event) {}
