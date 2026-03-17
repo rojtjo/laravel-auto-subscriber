@@ -18,6 +18,9 @@ trait AutoSubscriber
                     ->listen($event, [static::class, $handler])));
     }
 
+    /**
+     * @return list<string>
+     */
     protected function exclude(): array
     {
         return [];

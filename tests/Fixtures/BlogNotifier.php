@@ -6,17 +6,20 @@ namespace Rojtjo\LaravelAutoSubscriber\Fixtures;
 
 use Rojtjo\LaravelAutoSubscriber\AutoSubscriber;
 
-final class BlogNotifier
+final readonly class BlogNotifier
 {
     use AutoSubscriber;
 
-    private array $exclude;
+    /**
+     * @param  list<string>  $exclude
+     */
+    public function __construct(
+        private array $exclude = [],
+    ) {}
 
-    public function __construct(array $exclude = [])
-    {
-        $this->exclude = $exclude;
-    }
-
+    /**
+     * @return list<string>
+     */
     public function exclude(): array
     {
         return $this->exclude;
@@ -28,8 +31,14 @@ final class BlogNotifier
 
     public function sendReplyChangedNotification(ReplyUpdated|ReplyDeleted $event): void {}
 
+    /**
+     * @phpstan-ignore method.unused
+     */
     private function privateMethodsAreIgnored(NewReply $event): void {}
 
+    /**
+     * @phpstan-ignore method.unused
+     */
     private function protectedMethodsAreIgnored(NewReply $event): void {}
 
     public function multipleParametersIsInvalid(NewReply $event, string $foo): void {}
