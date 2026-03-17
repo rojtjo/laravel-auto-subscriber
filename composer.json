@@ -23,7 +23,6 @@
         "illuminate/collections": "^12.0|^13.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.6.0",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^12.5",
         "symfony/var-dumper": "^5.2"

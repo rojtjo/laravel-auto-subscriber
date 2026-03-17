@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "declare_strict_types": true,
+        "final_class": true,
+        "new_with_parentheses": false,
+        "single_trait_insert_per_statement": true,
+        "trailing_comma_in_multiline": {
+            "after_heredoc": true,
+            "elements": ["arguments", "arrays", "match", "parameters"]
+        }
+    }
+}
