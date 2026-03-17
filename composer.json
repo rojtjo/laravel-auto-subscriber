@@ -25,17 +25,17 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.6.0",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.5",
         "symfony/var-dumper": "^5.2"
     },
     "autoload": {
         "psr-4": {
-            "Rojtjo\\LaravelAutoSubscriber\\": "src"
+            "Rojtjo\\LaravelAutoSubscriber\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Rojtjo\\LaravelAutoSubscriber\\": "tests"
+            "Rojtjo\\LaravelAutoSubscriber\\": "tests/"
         }
     },
     "scripts": {

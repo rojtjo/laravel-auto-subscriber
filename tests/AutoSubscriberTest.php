@@ -4,100 +4,45 @@ declare(strict_types=1);
 
 namespace Rojtjo\LaravelAutoSubscriber;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Rojtjo\LaravelAutoSubscriber\Fixtures\BlogNotifier;
+use Rojtjo\LaravelAutoSubscriber\Fixtures\NewReply;
+use Rojtjo\LaravelAutoSubscriber\Fixtures\ReplyDeleted;
+use Rojtjo\LaravelAutoSubscriber\Fixtures\ReplyUpdated;
 
 final class AutoSubscriberTest extends TestCase
 {
-    private DispatcherFake $dispatcher;
-
-    protected function setUp(): void
-    {
-        $this->dispatcher = new DispatcherFake();
-    }
-
-    /** @test */
+    #[Test]
     public function it_subscribes_to_events(): void
     {
-        $subscriber = new BlogNotifier();
-        $subscriber->subscribe($this->dispatcher);
+        $dispatcher = new DispatcherFake();
 
-        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendNewReplyNotification', NewReply::class);
-        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendAnotherNewReplyNotification', NewReply::class);
-        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyUpdated::class);
-        $this->dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyDeleted::class);
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'subscribe');
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'privateMethodsAreIgnored');
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'protectedMethodsAreIgnored');
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'multipleParametersIsInvalid');
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'scalarParameterType');
+        $subscriber = new BlogNotifier();
+        $subscriber->subscribe($dispatcher);
+
+        $dispatcher->assertHasListener(BlogNotifier::class, 'sendNewReplyNotification', NewReply::class);
+        $dispatcher->assertHasListener(BlogNotifier::class, 'sendAnotherNewReplyNotification', NewReply::class);
+        $dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyUpdated::class);
+        $dispatcher->assertHasListener(BlogNotifier::class, 'sendReplyChangedNotification', ReplyDeleted::class);
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'subscribe');
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'privateMethodsAreIgnored');
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'protectedMethodsAreIgnored');
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'multipleParametersIsInvalid');
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'scalarParameterType');
     }
 
-    /** @test */
+    #[Test]
     public function it_exclude_handlers(): void
     {
+        $dispatcher = new DispatcherFake();
+
         $subscriber = new BlogNotifier([
             'sendAnotherNewReplyNotification',
         ]);
 
-        $subscriber->subscribe($this->dispatcher);
+        $subscriber->subscribe($dispatcher);
 
-        $this->dispatcher->assertMissingListener(BlogNotifier::class, 'sendAnotherNewReplyNotification', NewReply::class);
+        $dispatcher->assertMissingListener(BlogNotifier::class, 'sendAnotherNewReplyNotification', NewReply::class);
     }
-}
-
-final class BlogNotifier
-{
-    use AutoSubscriber;
-
-    private array $exclude;
-
-    public function __construct(array $exclude = [])
-    {
-        $this->exclude = $exclude;
-    }
-
-    public function exclude(): array
-    {
-        return $this->exclude;
-    }
-
-    public function sendNewReplyNotification(NewReply $event): void
-    {
-    }
-
-    public function sendAnotherNewReplyNotification(NewReply $event): void
-    {
-    }
-
-    public function sendReplyChangedNotification(ReplyUpdated|ReplyDeleted $event): void
-    {
-    }
-
-    private function privateMethodsAreIgnored(NewReply $event): void
-    {
-    }
-
-    private function protectedMethodsAreIgnored(NewReply $event): void
-    {
-    }
-
-    public function multipleParametersIsInvalid(NewReply $event, string $foo): void
-    {
-    }
-
-    public function scalarParameterType(string $event): void
-    {
-    }
-}
-
-final class NewReply
-{
-}
-
-final class ReplyUpdated
-{
-}
-
-final class ReplyDeleted
-{
 }
