@@ -19,11 +19,16 @@ final class FindListeners
     {
         $reflectionClass = new \ReflectionClass($subscriber);
 
-        return collect($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
+        /**
+         * @var Collection<string, list<class-string>> $listeners
+         */
+        $listeners = collect($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
             ->filter(self::hasOneClassParameter())
             ->keyBy(self::handlerMethod())
             ->except(['subscribe'])
             ->map(self::eventName());
+
+        return $listeners;
     }
 
     private static function hasOneClassParameter(): callable
