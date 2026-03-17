@@ -23,7 +23,7 @@ final class DispatcherFake implements Dispatcher
         ];
     }
 
-    public function assertHasListener(string $subscriber, string $handler, string $event = null): void
+    public function assertHasListener(string $subscriber, string $handler, ?string $event = null): void
     {
         Assert::assertTrue(
             $this->hasListener($subscriber, $handler, $event),
@@ -31,7 +31,7 @@ final class DispatcherFake implements Dispatcher
         );
     }
 
-    public function assertMissingListener(string $subscriber, string $handler, string $event = null): void
+    public function assertMissingListener(string $subscriber, string $handler, ?string $event = null): void
     {
         Assert::assertFalse(
             $this->hasListener($subscriber, $handler, $event),
