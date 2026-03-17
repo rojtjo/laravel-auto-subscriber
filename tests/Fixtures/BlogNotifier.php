@@ -22,31 +22,17 @@ final class BlogNotifier
         return $this->exclude;
     }
 
-    public function sendNewReplyNotification(NewReply $event): void
-    {
-    }
+    public function sendNewReplyNotification(NewReply $event): void {}
 
-    public function sendAnotherNewReplyNotification(NewReply $event): void
-    {
-    }
+    public function sendAnotherNewReplyNotification(NewReply $event): void {}
 
-    public function sendReplyChangedNotification(ReplyUpdated|ReplyDeleted $event): void
-    {
-    }
+    public function sendReplyChangedNotification(ReplyUpdated|ReplyDeleted $event): void {}
 
-    private function privateMethodsAreIgnored(NewReply $event): void
-    {
-    }
+    private function privateMethodsAreIgnored(NewReply $event): void {}
 
-    private function protectedMethodsAreIgnored(NewReply $event): void
-    {
-    }
+    private function protectedMethodsAreIgnored(NewReply $event): void {}
 
-    public function multipleParametersIsInvalid(NewReply $event, string $foo): void
-    {
-    }
+    public function multipleParametersIsInvalid(NewReply $event, string $foo): void {}
 
-    public function scalarParameterType(string $event): void
-    {
-    }
+    public function scalarParameterType(string $event): void {}
 }

@@ -27,7 +27,7 @@ final class DispatcherFake implements Dispatcher
     {
         Assert::assertTrue(
             $this->hasListener($subscriber, $handler, $event),
-            "Expected listener to be registered: {$subscriber}::{$handler} event: {$event}"
+            "Expected listener to be registered: {$subscriber}::{$handler} event: {$event}",
         );
     }
 
@@ -35,7 +35,7 @@ final class DispatcherFake implements Dispatcher
     {
         Assert::assertFalse(
             $this->hasListener($subscriber, $handler, $event),
-            "Expected listener to be missing: {$subscriber}::{$handler} event: {$event}"
+            "Expected listener to be missing: {$subscriber}::{$handler} event: {$event}",
         );
     }
 
@@ -48,35 +48,19 @@ final class DispatcherFake implements Dispatcher
             ->isNotEmpty();
     }
 
-    public function hasListeners($eventName)
-    {
-    }
+    public function hasListeners($eventName) {}
 
-    public function subscribe($subscriber)
-    {
-    }
+    public function subscribe($subscriber) {}
 
-    public function until($event, $payload = [])
-    {
-    }
+    public function until($event, $payload = []) {}
 
-    public function dispatch($event, $payload = [], $halt = false)
-    {
-    }
+    public function dispatch($event, $payload = [], $halt = false) {}
 
-    public function push($event, $payload = [])
-    {
-    }
+    public function push($event, $payload = []) {}
 
-    public function flush($event)
-    {
-    }
+    public function flush($event) {}
 
-    public function forget($event)
-    {
-    }
+    public function forget($event) {}
 
-    public function forgetPushed()
-    {
-    }
+    public function forgetPushed() {}
 }
