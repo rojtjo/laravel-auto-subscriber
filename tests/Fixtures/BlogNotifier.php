@@ -15,9 +15,7 @@ final readonly class BlogNotifier
      */
     public function __construct(
         private array $exclude = [],
-    )
-    {
-    }
+    ) {}
 
     /**
      * @return list<string>
