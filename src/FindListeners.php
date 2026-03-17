@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rojtjo\LaravelAutoSubscriber;
 
 use Illuminate\Support\Collection;
+use ReflectionClass;
 use ReflectionIntersectionType;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -13,84 +14,71 @@ use ReflectionUnionType;
 final class FindListeners
 {
     /**
-     * @return Collection<string, array<string>>
+     * @return Collection<string, Collection<int, class-string>>
      */
     public static function for(object $subscriber): Collection
     {
-        $reflectionClass = new \ReflectionClass($subscriber);
+        $reflectionClass = new ReflectionClass($subscriber);
 
-        /**
-         * @var Collection<string, list<class-string>> $listeners
-         */
-        $listeners = collect($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
-            ->filter(self::hasOneClassParameter())
-            ->keyBy(self::handlerMethod())
-            ->except(['subscribe'])
-            ->map(self::eventName());
-
-        return $listeners;
+        return collect($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC))
+            ->filter(self::hasOneClassParameter(...))
+            ->keyBy(self::handlerMethod(...))
+            ->except('subscribe')
+            ->map(self::eventName(...));
     }
 
-    private static function hasOneClassParameter(): callable
+    private static function hasOneClassParameter(ReflectionMethod $method): bool
     {
-        return function (ReflectionMethod $method) {
-            if ($method->getNumberOfParameters() !== 1) {
+        if ($method->getNumberOfParameters() !== 1) {
+            return false;
+        }
+
+        [$parameter] = $method->getParameters();
+        if (! $parameter->hasType()) {
+            return false;
+        }
+
+        $type = $parameter->getType();
+        if ($type instanceof ReflectionIntersectionType) {
+            return false;
+        }
+
+        $types = $type instanceof ReflectionUnionType
+            ? $type->getTypes()
+            : [$type];
+
+        foreach ($types as $type) {
+            if (! $type instanceof ReflectionNamedType) {
                 return false;
             }
 
-            [$parameter] = $method->getParameters();
-            if (! $parameter->hasType()) {
+            if ($type->isBuiltin()) {
                 return false;
             }
+        }
 
-            $type = $parameter->getType();
-            if ($type instanceof ReflectionIntersectionType) {
-                return false;
-            }
+        return true;
+    }
 
-            $types = $type instanceof ReflectionUnionType
-                ? $type->getTypes()
-                : [$type];
-
-            foreach ($types as $type) {
-                if (! $type instanceof ReflectionNamedType) {
-                    return false;
-                }
-
-                if ($type->isBuiltin()) {
-                    return false;
-                }
-            }
-
-            return true;
-        };
+    private static function handlerMethod(ReflectionMethod $method): string
+    {
+        return $method->getName();
     }
 
     /**
-     * @return callable(ReflectionMethod): string
+     * @return Collection<int, class-string>
      */
-    private static function handlerMethod(): callable
+    private static function eventName(ReflectionMethod $method): Collection
     {
-        return function (ReflectionMethod $method) {
-            return $method->getName();
-        };
-    }
+        [$parameter] = $method->getParameters();
 
-    private static function eventName(): callable
-    {
-        return function (ReflectionMethod $method) {
-            [$parameter] = $method->getParameters();
+        /** @var ReflectionNamedType|ReflectionUnionType $type */
+        $type = $parameter->getType();
+        $types = $type instanceof ReflectionUnionType
+            ? $type->getTypes()
+            : [$type];
 
-            /** @var ReflectionNamedType|ReflectionUnionType $type */
-            $type = $parameter->getType();
-            $types = $type instanceof ReflectionUnionType
-                ? $type->getTypes()
-                : [$type];
-
-            return array_map(
-                fn (ReflectionNamedType $type) => $type->getName(),
-                $types,
-            );
-        };
+        return collect($types)
+            ->map(fn (ReflectionNamedType $type) => $type->getName());
     }
 }
